@@ -4,6 +4,8 @@ import 'Agenda.dart';
 import 'Carte.dart';
 import 'ChatPage.dart';
 import 'Dashboard.dart';
+import 'DashboardChauffeur.dart';
+import 'Profile.dart'; // Import indispensable
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,16 +15,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   int _selectedIndex = 0;
-
-  final List<Widget> _pages = const [
-    Dashboard(),
-    NearestMechanicsPage(),
-    AgendaPage(),
-    AuraApp()
-
-  ];
+  bool _showCarDashboard = true; // Gère le switch interne à l'index 0
 
   void _onItemTapped(int index) {
     setState(() {
@@ -32,26 +26,64 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Le menu global ne s'affiche que si on est en mode "Voiture"
+    // ou sur les autres onglets (Carte, Agenda, Aura)
+    bool shouldShowGlobalMenu = _selectedIndex != 0 || _showCarDashboard;
+
     return Scaffold(
       body: Stack(
         children: [
-
-          // 👇 Pages persistantes
           IndexedStack(
             index: _selectedIndex,
-            children: _pages,
+            children: [
+              // 🏠 Index 0 : Dashboard Dynamique (Voiture ou Profil)
+              _showCarDashboard
+                  ? Dashboard(
+                key: _selectedIndex == 0 && _showCarDashboard ? UniqueKey() : const ValueKey('db'),
+                onSwitchProfile: () => setState(() => _showCarDashboard = false),
+              )
+                  : DashboardChauffeur(
+                key: _selectedIndex == 0 && !_showCarDashboard ? UniqueKey() : const ValueKey('chauffeur'),
+                onSwitchCar: () => setState(() => _showCarDashboard = true),
+              ),
+
+              // 📍 Index 1 : Carte
+              NearestMechanicsPage(
+                key: _selectedIndex == 1 ? UniqueKey() : const ValueKey('carte'),
+                onBackToDashboard: () => _onItemTapped(0),
+              ),
+
+              // 📅 Index 2 : Agenda
+              AgendaPage(
+                key: _selectedIndex == 2 ? UniqueKey() : const ValueKey('agenda'),
+                onBackToDashboard: () => _onItemTapped(0),
+              ),
+
+              // 🤖 Index 3 : AuraApp (IA)
+              AuraApp(
+                key: _selectedIndex == 3 ? UniqueKey() : const ValueKey('aura'),
+                onBackToDashboard: () => _onItemTapped(0),
+              ),
+
+              ProfilePage(
+                key: _selectedIndex == 4 ? UniqueKey() : const ValueKey('profile'),
+                onBackToDashboard: () => _onItemTapped(0),
+              ),
+            ],
           ),
 
-          // 👇 Ton Menu global ici
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Menu(
-              selectedIndex: _selectedIndex,
-              onItemTapped: _onItemTapped,
+
+          // 📱 Barre de navigation flottante (Menu Global)
+          if (shouldShowGlobalMenu)
+            Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: Menu(
+                selectedIndex: _selectedIndex,
+                onItemTapped: _onItemTapped,
+              ),
             ),
-          ),
         ],
       ),
     );

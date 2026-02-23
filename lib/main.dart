@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tahki_drive1/pages/Accueil.dart';
 import 'package:tahki_drive1/pages/Main_screen.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'Inter',
       ),
-      home: const MainScreen(),
+      home: const HomePage(),
     );
   }
 }

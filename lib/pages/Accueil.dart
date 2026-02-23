@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tahki_drive1/pages/Main_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -251,8 +252,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 const SizedBox(height: 40),
 
                 // Bouton animé
-                _buildAnimatedButton(() => setState(() => _dragOffset = 0)),
-              ],
+// Dans la méthode _buildLoginPage, modifie l'appel du bouton :
+                _buildAnimatedButton(() {
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MainScreen()),
+                  );
+                }),              ],
             ),
           ),
         ),

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+// Suppression de l'import Main_screen pour éviter les imports circulaires inutiles
 
 class NearestMechanicsPage extends StatefulWidget {
-  const NearestMechanicsPage({super.key});
+  // 1. AJOUTE CETTE LIGNE : On déclare le callback
+  final VoidCallback? onBackToDashboard;
+
+  // 2. MODIFIE LE CONSTRUCTEUR : On ajoute le paramètre
+  const NearestMechanicsPage({super.key, this.onBackToDashboard});
 
   @override
   State<NearestMechanicsPage> createState() => _NearestMechanicsPageState();
@@ -17,7 +22,6 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     );
-    // Lancer l'animation dès que la page est construite
     _controller.forward();
   }
 
@@ -27,18 +31,10 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
     super.dispose();
   }
 
-  // ================== LUXURY ENTRY ANIMATION ==================
-  Widget _luxuryAnimatedEntry({
-    required Widget child,
-    required double delay,
-  }) {
+  Widget _luxuryAnimatedEntry({required Widget child, required double delay}) {
     final animation = CurvedAnimation(
       parent: _controller,
-      curve: Interval(
-        delay,
-        1,
-        curve: Curves.easeOutBack,
-      ),
+      curve: Interval(delay, 1, curve: Curves.easeOutBack),
     );
 
     return AnimatedBuilder(
@@ -52,10 +48,7 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
               end: Offset.zero,
             ).animate(animation),
             child: ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.92,
-                end: 1,
-              ).animate(animation),
+              scale: Tween<double>(begin: 0.92, end: 1).animate(animation),
               child: child,
             ),
           ),
@@ -85,11 +78,9 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
             ),
           ),
 
-          // === 2. CONTENU PRINCIPAL ===
           SafeArea(
             child: Column(
               children: [
-                // AppBar (Animation immédiate)
                 _luxuryAnimatedEntry(
                   delay: 0.0,
                   child: Padding(
@@ -99,7 +90,12 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
                       children: [
                         IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+                            // 3. MODIFIE ICI : On utilise le callback du widget
+                            if (widget.onBackToDashboard != null) {
+                              widget.onBackToDashboard!();
+                            }
+                          },
                         ),
                         const Column(
                           children: [
@@ -118,7 +114,7 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
                   ),
                 ),
 
-                // === CARTE STYLE MAP (Animation à 0.2) ===
+                // === CARTE STYLE MAP ===
                 _luxuryAnimatedEntry(
                   delay: 0.1,
                   child: Container(
@@ -173,7 +169,7 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
                   ),
                 ),
 
-                // === FILTRES (Animation à 0.2) ===
+                // === FILTRES ===
                 _luxuryAnimatedEntry(
                   delay: 0.2,
                   child: SingleChildScrollView(
@@ -192,7 +188,6 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
 
                 const SizedBox(height: 16),
 
-                // === LISTE DES GARAGES (Animation en cascade) ===
                 Expanded(
                   child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -210,8 +205,6 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
       ),
     );
   }
-
-  // --- WIDGETS DE COMPOSANTS ---
 
   Widget _buildFilterChip(String label, IconData icon, {required bool isSelected}) {
     return Container(
@@ -278,7 +271,6 @@ class _NearestMechanicsPageState extends State<NearestMechanicsPage> with Single
   }
 }
 
-// MapPainter reste identique à votre version
 class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

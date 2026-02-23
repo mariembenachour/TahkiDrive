@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:tahki_drive1/pages/Dashboard.dart';
+import 'package:tahki_drive1/pages/Main_screen.dart';
 
 import '../menus/menu.dart';
 
@@ -128,18 +129,19 @@ class _PanneDetailsPageState extends State<PanneDetailsPage>
                 _buildCircleButton(
                   Icons.arrow_back,
                       () {
-                    Navigator.of(context).pushReplacement(
+                    // On retourne au MainScreen qui gère l'IndexedStack et le Menu
+                    Navigator.of(context).pushAndRemoveUntil(
                       PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => const Dashboard(), // ta page précédente
+                        pageBuilder: (context, animation, secondaryAnimation) => const MainScreen(),
                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(-1.0, 0.0); // départ depuis la gauche
-                          const end = Offset.zero;          // arrivée à sa place
-                          final tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: Curves.easeInOut));
+                          const begin = Offset(-1.0, 0.0); // Animation de glissement depuis la gauche
+                          const end = Offset.zero;
+                          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
                           final offsetAnimation = animation.drive(tween);
                           return SlideTransition(position: offsetAnimation, child: child);
                         },
                       ),
+                          (route) => false, // On vide la pile pour éviter les bugs de retour
                     );
                   },
                 ),

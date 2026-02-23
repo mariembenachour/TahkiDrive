@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AgendaPage extends StatefulWidget {
-  const AgendaPage({super.key});
+  // 👇 Ajout de cette fonction pour communiquer avec MainScreen
+  final VoidCallback? onBackToDashboard;
+
+  const AgendaPage({super.key, this.onBackToDashboard});
 
   @override
   State<AgendaPage> createState() => _AgendaPageState();
@@ -11,9 +14,7 @@ class AgendaPage extends StatefulWidget {
 class _AgendaPageState extends State<AgendaPage>
     with SingleTickerProviderStateMixin {
 
-  // ================= ANIMATION =================
   late AnimationController _controller;
-
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -21,12 +22,10 @@ class _AgendaPageState extends State<AgendaPage>
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-
     _controller.forward();
   }
 
@@ -36,18 +35,13 @@ class _AgendaPageState extends State<AgendaPage>
     super.dispose();
   }
 
-  // ================= LUXURY ENTRY =================
   Widget _luxuryAnimatedEntry({
     required Widget child,
     required double delay,
   }) {
     final animation = CurvedAnimation(
       parent: _controller,
-      curve: Interval(
-        delay,
-        1,
-        curve: Curves.easeOutBack,
-      ),
+      curve: Interval(delay, 1, curve: Curves.easeOutBack),
     );
 
     return FadeTransition(
@@ -58,10 +52,7 @@ class _AgendaPageState extends State<AgendaPage>
           end: Offset.zero,
         ).animate(animation),
         child: ScaleTransition(
-          scale: Tween<double>(
-            begin: 0.92,
-            end: 1,
-          ).animate(animation),
+          scale: Tween<double>(begin: 0.92, end: 1).animate(animation),
           child: child,
         ),
       ),
@@ -83,19 +74,22 @@ class _AgendaPageState extends State<AgendaPage>
         child: SafeArea(
           child: Column(
             children: [
-
               // ================= HEADER =================
               _luxuryAnimatedEntry(
                 delay: 0.05,
                 child: Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildHeaderButton(
                         Icons.arrow_back_ios_new,
-                            () => Navigator.pop(context),
+                            () {
+                          // 👇 Correction : On appelle le callback au lieu de Navigator.pop
+                          if (widget.onBackToDashboard != null) {
+                            widget.onBackToDashboard!();
+                          }
+                        },
                       ),
                       const Text(
                         "Maintenance Calendar",
@@ -105,17 +99,12 @@ class _AgendaPageState extends State<AgendaPage>
                           color: Colors.white,
                         ),
                       ),
-                      _buildHeaderButton(
-                        Icons.add,
-                            () {},
-                        isPrimary: true,
-                      ),
+                      _buildHeaderButton(Icons.add, () {}, isPrimary: true),
                     ],
                   ),
                 ),
               ),
 
-              // ================= CONTENT =================
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -124,7 +113,6 @@ class _AgendaPageState extends State<AgendaPage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         // ================= CALENDAR =================
                         _luxuryAnimatedEntry(
                           delay: 0.2,
@@ -145,8 +133,7 @@ class _AgendaPageState extends State<AgendaPage>
                               lastDay: DateTime.utc(2030, 12, 31),
                               focusedDay: _focusedDay,
                               calendarFormat: _calendarFormat,
-                              selectedDayPredicate: (day) =>
-                                  isSameDay(_selectedDay, day),
+                              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                               onDaySelected: (selectedDay, focusedDay) {
                                 setState(() {
                                   _selectedDay = selectedDay;
@@ -161,20 +148,12 @@ class _AgendaPageState extends State<AgendaPage>
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF160078),
                                 ),
-                                leftChevronIcon: Icon(Icons.chevron_left,
-                                    color: Color(0xFF7226FF)),
-                                rightChevronIcon: Icon(Icons.chevron_right,
-                                    color: Color(0xFF7226FF)),
+                                leftChevronIcon: Icon(Icons.chevron_left, color: Color(0xFF7226FF)),
+                                rightChevronIcon: Icon(Icons.chevron_right, color: Color(0xFF7226FF)),
                               ),
                               calendarStyle: const CalendarStyle(
-                                todayDecoration: BoxDecoration(
-                                  color: Color(0xFFD1B3FF),
-                                  shape: BoxShape.circle,
-                                ),
-                                selectedDecoration: BoxDecoration(
-                                  color: Color(0xFF7226FF),
-                                  shape: BoxShape.circle,
-                                ),
+                                todayDecoration: BoxDecoration(color: Color(0xFFD1B3FF), shape: BoxShape.circle),
+                                selectedDecoration: BoxDecoration(color: Color(0xFF7226FF), shape: BoxShape.circle),
                               ),
                             ),
                           ),
@@ -186,11 +165,7 @@ class _AgendaPageState extends State<AgendaPage>
                           delay: 0.35,
                           child: const Text(
                             "Upcoming",
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF160078),
-                            ),
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF160078)),
                           ),
                         ),
 
@@ -232,30 +207,20 @@ class _AgendaPageState extends State<AgendaPage>
     );
   }
 
-  // ================= HEADER BUTTON =================
-  Widget _buildHeaderButton(
-      IconData icon, VoidCallback onTap,
-      {bool isPrimary = false}) {
+  Widget _buildHeaderButton(IconData icon, VoidCallback onTap, {bool isPrimary = false}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isPrimary
-              ? const Color(0xFF160078) // 🔥 violet foncé
-              : Colors.white.withOpacity(0.2),
+          color: isPrimary ? const Color(0xFF160078) : Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: Icon(icon, color: Colors.white, size: 20),
       ),
     );
   }
 
-  // ================= MAINTENANCE ITEM =================
   Widget _buildMaintenanceItem({
     required String title,
     required String date,
@@ -271,12 +236,7 @@ class _AgendaPageState extends State<AgendaPage>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
       ),
       child: Row(
         children: [
@@ -286,8 +246,7 @@ class _AgendaPageState extends State<AgendaPage>
               color: const Color(0xFF7226FF).withOpacity(0.1),
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Icon(icon,
-                color: const Color(0xFF7226FF), size: 30),
+            child: Icon(icon, color: const Color(0xFF7226FF), size: 30),
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -295,37 +254,21 @@ class _AgendaPageState extends State<AgendaPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16)),
+                    Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     if (tag != null)
-                      Text(tag,
-                          style: TextStyle(
-                            color: tagColor ?? Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          )),
+                      Text(tag, style: TextStyle(color: tagColor ?? Colors.red, fontWeight: FontWeight.bold, fontSize: 12)),
                   ],
                 ),
-                Text(date,
-                    style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 13)),
+                Text(date, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
                 Row(
                   children: [
-                    const Icon(Icons.location_on,
-                        size: 12, color: Colors.grey),
+                    const Icon(Icons.location_on, size: 12, color: Colors.grey),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(location,
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12),
-                          overflow: TextOverflow.ellipsis),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12), overflow: TextOverflow.ellipsis),
                     ),
                   ],
                 ),
@@ -335,20 +278,14 @@ class _AgendaPageState extends State<AgendaPage>
           if (showButton)
             Container(
               margin: const EdgeInsets.only(left: 10),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                border: Border.all(
-                    color: const Color(0xFF160078)), // 🔥 violet foncé
+                border: Border.all(color: const Color(0xFF160078)),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: const Text(
                 "View Details",
-                style: TextStyle(
-                  color: Color(0xFF160078), // 🔥 violet foncé
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Color(0xFF160078), fontWeight: FontWeight.bold, fontSize: 12),
               ),
             ),
         ],

@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const AuraApp());
-
+// On transforme AuraApp en un simple Widget (Stateless) sans MaterialApp
 class AuraApp extends StatelessWidget {
-  const AuraApp({super.key});
+  final VoidCallback? onBackToDashboard; // Callback pour le retour
+
+  const AuraApp({super.key, this.onBackToDashboard});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        fontFamily: 'sans-serif',
-      ),
-      home: const ChatPage(),
-    );
+    // On retourne directement ChatPage
+    return ChatPage(onBackToDashboard: onBackToDashboard);
   }
 }
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final VoidCallback? onBackToDashboard;
+  const ChatPage({super.key, this.onBackToDashboard});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -37,9 +33,9 @@ class _ChatPageState extends State<ChatPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF893DEF), // Sombre en haut
-              Color(0xFFD6CEE4), // CLAIR au milieu (votre demande)
-              Color(0xFF5C3897), // Sombre en bas
+              Color(0xFF893DEF),
+              Color(0xFFD6CEE4),
+              Color(0xFF5C3897),
             ],
           ),
         ),
@@ -74,12 +70,17 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              // 👇 CORRECTION ICI : On utilise le callback
+              if (widget.onBackToDashboard != null) {
+                widget.onBackToDashboard!();
+              }
+            },
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.4), // Plus sombre pour voir sur le fond clair
+              color: Colors.black.withOpacity(0.4),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.white24),
             ),
@@ -92,7 +93,7 @@ class _ChatPageState extends State<ChatPage> {
                     color: Colors.deepPurple,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text("BETA", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
+                  child: const Text("BETA", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 const Icon(Icons.keyboard_arrow_down, size: 18, color: Colors.white),
               ],
@@ -112,13 +113,15 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  // ... (Garde tes widgets _buildUserMessage, _buildAuraMessage et _buildInputSection identiques)
+
   Widget _buildUserMessage(String text) {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5), // SOMBRE pour contraster avec le fond clair
+          color: Colors.black.withOpacity(0.5),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(5),
@@ -151,7 +154,6 @@ class _ChatPageState extends State<ChatPage> {
               child: Text(
                 "Yes, of course. We're discussing training in another chat.",
                 style: TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
-                // Texte sombre ici car le milieu du fond est très clair (0xFFD6CEE4)
               ),
             ),
           ],
@@ -165,7 +167,7 @@ class _ChatPageState extends State<ChatPage> {
               Container(
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6), // SOMBRE
+                  color: Colors.black.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Row(
@@ -198,7 +200,7 @@ class _ChatPageState extends State<ChatPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               height: 55,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7), // Très sombre pour bien voir où taper
+                color: Colors.black.withOpacity(0.7),
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(color: Colors.white24),
               ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import '../menus/GlobalNavBar.dart';
+import 'DashboardChauffeur.dart';
 import 'DetailsCar.dart';
 import 'detailsPannes.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final VoidCallback onSwitchProfile;
+  const Dashboard({super.key, required this.onSwitchProfile});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -12,7 +15,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMixin {
   // ================== ANIMATION CONTROLLER ==================
   late AnimationController _controller;
-
+  int selectedIndex = 0;
   // Définition du gradient pour les textes et les barres
   final Gradient _brandGradient = const LinearGradient(
     colors: [Color(0xFF7226FF), Color(0xFF160078)],
@@ -146,18 +149,8 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
                   child: Column(
                     children: [
                       // --- HEADER ---
-                      _luxuryAnimatedEntry(
-                        delay: 0.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildFloatingButton(Icons.menu),
-                            _buildFloatingButton(Icons.notifications),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
+                      // Supprimé les Positioned qui étaient ici
+                      const SizedBox(height: 70),
 
                       // --- CARTE DE VOITURE ---
                       _luxuryAnimatedEntry(
@@ -513,6 +506,24 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
             ),
           ),
 
+          // --- MENU SUPERIEUR (Positionné correctement dans le Stack) ---
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            left: 20, // Changé de right à left pour mettre le menu à gauche
+            child: GlobalNavBar(
+              currentIndex: 0, // 0 car on est sur la page Voiture
+              onTabSelected: (index) {
+                if (index == 1) widget.onSwitchProfile(); // Déclenche le switch vers Profil
+              },
+            ),
+          ),
+
+// OPTIONNEL : Un bouton notif à droite pour équilibrer
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 15,
+            right: 20, // Changé de left à right pour mettre la notification à droite
+            child: _buildFloatingButton(Icons.notifications_none_rounded),
+          ),
         ],
       ),
     );
