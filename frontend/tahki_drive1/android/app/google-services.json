@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358214306468",
+    "project_id": "tahkidrive",
+    "storage_bucket": "tahkidrive.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358214306468:android:0d49939552b1318666f431",
+        "android_client_info": {
+          "package_name": "com.example.tahki_drive1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgVBbLrGR5ngNZ95n8QUwjXTMPQpCQZlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
