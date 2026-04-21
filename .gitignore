@@ -1,0 +1,4 @@
+"*.json" 
+".env" 
+"db.py" 
+"__pycache__/" 
