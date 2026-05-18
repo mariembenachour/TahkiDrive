@@ -1,0 +1,27 @@
+# SECRETS
+.env
+*.env
+firebase_credentials.json
+google-services.json
+GoogleService-Info.plist
+
+# FLUTTER
+frontend/build/
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/.idea/
+frontend/**/*.g.dart
+
+# PYTHON
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.venv/
+
+# SYSTEME
+.DS_Store
+Thumbs.db
+*.iml
+.vscode/
