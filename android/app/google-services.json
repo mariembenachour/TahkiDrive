@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "386239770827",
+    "project_id": "tahkidrive-123",
+    "storage_bucket": "tahkidrive-123.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386239770827:android:494d301665d665e865eb4e",
+        "android_client_info": {
+          "package_name": "com.example.tahki_drive1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "386239770827-vr98dq1hd1jpi7mc56chi1nmrvul4imb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tahki_drive1",
+            "certificate_hash": "d730bae05ce76e09ca605dc2e0a6b0dc8a425258"
+          }
+        },
+        {
+          "client_id": "386239770827-6vr0rck7af0tj34f48tb0iar87vb1duq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7iyMFKnksjfJm2TAuu2oD4nDhLCvU1mg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "386239770827-6vr0rck7af0tj34f48tb0iar87vb1duq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
