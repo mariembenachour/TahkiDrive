@@ -1,0 +1,39 @@
+from pydantic import BaseModel
+from typing import Optional, List, Any
+from datetime import datetime, date
+class Vehicule(BaseModel):
+    matricule: str                              # PK
+    mark: Optional[str] = None
+    model: Optional[str] = None
+    alias: Optional[str] = None
+    max_speed: Optional[int] = None
+    images: Optional[str] = None
+    circulation_at: Optional[datetime] = None
+    capacity: Optional[str] = None
+    category: Optional[str] = None
+    date_install_boitier: Optional[datetime] = None
+    option_arret: Optional[bool] = None
+    date_garantie: Optional[str] = None
+    offest_tow: Optional[float] = None
+    serial_number: Optional[str] = None
+    power_hp: Optional[int] = None
+    seating: Optional[int] = None
+    fuel: Optional[str] = None
+    load_capacity: Optional[int] = None
+    ptac: Optional[int] = None
+    pv: Optional[int] = None
+    payload: Optional[int] = None
+    fuel_tank_capacity: Optional[int] = None
+    id_fuel_provider: Optional[int] = None
+    fuel_card_nr: Optional[str] = None
+    fuel_card_pin: Optional[str] = None
+    fuel_control_module: Optional[str] = None
+    control_magnetic_driver: Optional[str] = None
+    first_installation: Optional[datetime] = None
+    last_change: Optional[datetime] = None
+    soumission_distributed_on: Optional[datetime] = None
+    soumission_available_till: Optional[datetime] = None
+    restriction: Optional[str] = None
+    comment: Optional[str] = None
+    date_purchase: Optional[datetime] = None
+    place_purchase: Optional[str] = None
